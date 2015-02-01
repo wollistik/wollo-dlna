@@ -4,6 +4,18 @@
   <groupId>wollo-dlna</groupId>
   <artifactId>wollo-dlna</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+
+  <repositories>
+    <repository>
+      <id>xuggle repo</id>
+      <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
+    </repository>
+    <repository>
+      <id>4thline.org-repo</id>
+      <url>http://4thline.org/m2</url>
+    </repository>
+  </repositories>
+
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <finalName>${project.artifactId}</finalName>
@@ -45,6 +57,21 @@
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.10</version>
+    </dependency>
+    <dependency>
+      <groupId>xuggle</groupId>
+      <artifactId>xuggle-xuggler</artifactId>
+      <version>5.4</version>
+    </dependency>
+    <dependency>
+      <groupId>com.j256.ormlite</groupId>
+      <artifactId>ormlite-jdbc</artifactId>
+      <version>4.48</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <version>3.8.7</version>
     </dependency>
   </dependencies>
 </project>

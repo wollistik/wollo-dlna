@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.wollistik.dlna;
+package de.wollistik.dlna.server;
 
 import org.fourthline.cling.binding.annotations.UpnpService;
 import org.fourthline.cling.binding.annotations.UpnpServiceId;

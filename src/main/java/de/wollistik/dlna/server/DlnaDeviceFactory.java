@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.wollistik.dlna;
+package de.wollistik.dlna.server;
 
 import org.fourthline.cling.binding.annotations.AnnotationLocalServiceBinder;
 import org.fourthline.cling.model.DefaultServiceManager;
