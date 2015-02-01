@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.commons.codec.binary.Hex;
+
 /**
  * Fast checksum creation for large Files.
  * 
@@ -29,6 +31,15 @@ public class FastCheckSum {
     public static final long DEFAULT_SKIP_SIZE = 1024 * 1024 * 100;
 
     /**
+     * 
+     * @param file
+     * @return
+     */
+    public static String getChecksum(File file) {
+        return new FastCheckSum(file).createChecksum();
+    }
+
+    /**
      * The file to create a checksum for.
      */
     private File file;
@@ -40,26 +51,43 @@ public class FastCheckSum {
         this.file = file;
     }
 
+    /**
+     * Creates a checksum as Hex String.
+     * 
+     * @return
+     */
     public String createChecksum() {
 
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
 
+            digest.update(Primitives.toByteArray(file.length()));
+
             InputStream in = new FileInputStream(file);
 
             byte[] buffer = new byte[DEFAULT_CHUNK_SIZE];
 
-            int length = fillBuffer(in,
-                    buffer);
+            boolean finished = false;
 
-            digest.update(buffer,
-                    0,
-                    length);
+            while (!finished) {
 
-            long skipped = in.skip(DEFAULT_SKIP_SIZE);
+                int length = fillBuffer(in,
+                        buffer);
+                if (length != DEFAULT_CHUNK_SIZE) {
+                    finished = true;
+                }
 
-            String result = new String(digest.digest());
-            return result;
+                digest.update(buffer,
+                        0,
+                        length);
+                if (!finished) {
+                    in.skip(DEFAULT_SKIP_SIZE);
+                }
+
+            }
+            in.close();
+
+            return Hex.encodeHexString(digest.digest());
         } catch (NoSuchAlgorithmException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -68,8 +96,34 @@ public class FastCheckSum {
         return null;
     }
 
+    /**
+     * Reads from the {@link InputStream} until the buffer is completely filled
+     * or the end of the stream is reached.
+     * 
+     * @param in
+     *            the {@link InputStream} to read from
+     * @param buffer
+     *            the byte array to be filled
+     * @return the number of read bytes. If smaller than buffer.length, the end
+     *         of the stream is reached.
+     * @throws IOException
+     */
     private int fillBuffer(InputStream in,
-            byte[] buffer) {
-        return 0;
+            byte[] buffer) throws IOException {
+        int length = buffer.length;
+        int readTotal = 0;
+        int read = 0;
+
+        while (readTotal != buffer.length && read != -1) {
+            read = in.read(buffer,
+                    readTotal,
+                    length);
+
+            if (read != -1) {
+                readTotal += read;
+                length -= read;
+            }
+        }
+        return readTotal;
     }
 }
