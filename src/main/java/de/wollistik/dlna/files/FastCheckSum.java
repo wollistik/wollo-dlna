@@ -13,7 +13,9 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.binary.Hex;
 
 /**
- * Fast checksum creation for large Files.
+ * Fast checksum creation for large Files. The basic idea is not to take the
+ * complete file for the checksum, but instead take every 100MB a only a small
+ * chunk for checksum creation.
  * 
  * @author Wolfgang Wedelich-John<wolfgang.wedelich@wollistik.de>
  *
@@ -26,14 +28,17 @@ public class FastCheckSum {
     public static final int DEFAULT_CHUNK_SIZE = 1024 * 1024 * 5;
 
     /**
-     * The default size for skipping after a chunk. 100 MB.
+     * The default size for skipping after a chunk (100 MB).
      */
     public static final long DEFAULT_SKIP_SIZE = 1024 * 1024 * 100;
 
     /**
+     * Static method to obtain a new {@link FastCheckSum} object and call
+     * getChecksum Method.
      * 
      * @param file
-     * @return
+     *            the {@link File} to be used for checksum creation.
+     * @return the HEX String checksum.
      */
     public static String getChecksum(File file) {
         return new FastCheckSum(file).createChecksum();
@@ -61,6 +66,8 @@ public class FastCheckSum {
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
 
+            // add the file size in order to prevent duplicate sums, where the
+            // picked chunks are same
             digest.update(Primitives.toByteArray(file.length()));
 
             InputStream in = new FileInputStream(file);
@@ -73,13 +80,17 @@ public class FastCheckSum {
 
                 int length = fillBuffer(in,
                         buffer);
+                // if not completely filled, EOF reached
                 if (length != DEFAULT_CHUNK_SIZE) {
                     finished = true;
                 }
 
+                // add read data to digest
                 digest.update(buffer,
                         0,
                         length);
+
+                // skip to the next read position
                 if (!finished) {
                     in.skip(DEFAULT_SKIP_SIZE);
                 }

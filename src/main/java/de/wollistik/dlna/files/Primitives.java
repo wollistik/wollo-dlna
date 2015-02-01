@@ -6,6 +6,8 @@ package de.wollistik.dlna.files;
 import java.nio.ByteBuffer;
 
 /**
+ * Only static methods for dealing with primitive types.
+ * 
  * @author Wolfgang Wedelich-John<wolfgang.wedelich@wollistik.de>
  *
  */

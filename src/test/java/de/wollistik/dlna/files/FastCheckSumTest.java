@@ -15,11 +15,10 @@ import org.testng.annotations.Test;
  *
  */
 public class FastCheckSumTest {
-
     /**
-     * Creates a several hundred MB big test file.
      * 
-     * @throws IOException
+     * @param size
+     * @return
      */
     public File createTestFile(int size) {
 
