@@ -5,3 +5,7 @@
 /.project
 /test-output/
 /development.db
+/misc/
+/test.db
+/.externalToolBuilders/
+/.tern-project
